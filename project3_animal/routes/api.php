@@ -17,3 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+//設定API路徑
+use App\Http\Controllers\CharacterController;
+Route::apiResource("charactor", CharacterController::class);
