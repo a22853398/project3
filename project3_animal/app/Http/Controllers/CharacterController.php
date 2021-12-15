@@ -15,7 +15,9 @@ class CharacterController extends Controller
      */
     public function index()
     {
-        //
+        //讀取一整個表單，或者多筆資料的列表
+        $character = Character::get();
+        return response(['data' => $character]);
     }
 
     /**
@@ -50,7 +52,8 @@ class CharacterController extends Controller
      */
     public function show(character $character)
     {
-        //
+        //讀取單一個資料
+        return response($character, Response::HTTP_OK);
     }
 
     /**
@@ -73,7 +76,9 @@ class CharacterController extends Controller
      */
     public function update(Request $request, character $character)
     {
-        //
+        //更新的方法
+        $character->update($request->all());
+        return response($character, Response::HTTP_OK);
     }
 
     /**
