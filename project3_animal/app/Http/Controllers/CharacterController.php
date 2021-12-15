@@ -84,6 +84,8 @@ class CharacterController extends Controller
      */
     public function destroy(character $character)
     {
-        //
+        //刪除的方法
+        $character->delete();//變數的名稱必須與api.php裡面的Route定義的相同，不然會刪不掉
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 }

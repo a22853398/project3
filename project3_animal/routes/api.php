@@ -20,4 +20,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 //設定API路徑
 use App\Http\Controllers\CharacterController;
-Route::apiResource("charactor", CharacterController::class);
+Route::apiResource("character", CharacterController::class);
