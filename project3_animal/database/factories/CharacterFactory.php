@@ -18,7 +18,12 @@ class CharacterFactory extends Factory
      * @return (kanji, katagana, romaji)
      */
     protected function getCharNameArray($gender){
-        $tmpArray = ($gender == "male") ? $this->faker->first_name_male_pair() : $this->faker->first_name_female_pair();
+        $tmpArray = array();
+        if($gender == "male"){
+            $tmpArray = $this->faker->first_name_male_pair();
+        }else if($gender == "female"){
+            $tmpArray = $this->faker->first_name_female_pair();
+        }
         return $tmpArray;
     }
 
@@ -36,31 +41,37 @@ class CharacterFactory extends Factory
                                 "FAIRY01", "BUG01", "PSYCHIC01",
                                 "ELECTRIC01", "DRAGON01", "ICE01"
                             );
-        $gender =  array_rand(array("male", "female"));
-        $char_name = $this->getCharNameArray($gender);
-        $club = array_rand(array("剣道", "弓道", "空手", "柔道", "相撲", "茶道", "文芸", "奉仕", 
+        $serailid = $array_serialid[array_rand($array_serialid)];
+        $gender =  array_rand(["male", "female"]);//會回傳Key值，0或1
+        $gender = $gender == 0 ? "male" : "female";
+        $array_club = array("剣道", "弓道", "空手", "柔道", "相撲", "茶道", "文芸", "奉仕", 
                                 "生徒会", "帰宅", "図書委員", "風紀委員", "保健委員", "野球", "サッカー",
                                 "合気道", "オカルト", "アイドル研究", "昆虫研究", "チアリーディング",
                                 "吹奏楽", "映像研究", "パソコン研究", "水泳", "水球", "陸上", "軽音楽",
                                 "バレーボール", "バスケットボール", "社交ダンス", "漫画研究", "天文観測", "科学研究"
-                            ));
+                            );
+        $club = $array_club[array_rand($array_club)];
+        
+        $char_name_array = ($gender == "male") ? $this->faker->firstName("male") : $this->faker->firstName("female");
+        $char_name = ($gender == "male") ? $this->faker->firstName("male") : $this->faker->firstName("female");
+        $char_name_spell = ($gender == "male") ? $this->faker->firstKanaName("male") : $this->faker->firstKanaName("female");
         return [
             //使用faker 類別產生隨機機料
 
             //清單中隨機取一個分類的屬性
-            "serialid" => array_rand($array_serialid),
+            "serialid" => $serailid,
             //隨機角色性別
             "gender" => $gender,
             //隨機角色名稱
-            "char_name" => $char_name[0],
+            "char_name" => $char_name,
             //隨機角色念法
-            "char_name_spell" => $char_name[1],
+            "char_name_spell" => $char_name_spell,
             //隨機身高
-            "char_height" => random_int(140, 190),
+            "char_height" => $this->faker->numberBetween(140, 190),
             //隨機體重
-            "char_weight" => random_int(20, 90),
+            "char_weight" => $this->faker->numberBetween(20, 90),
             //隨機生日
-            "birthday" => $this->faker->date(),
+            "birthday" => $this->faker->dateTimeBetween("2004-01-01", "2007-12-31"),
             //隨機社團
             "club" => $club
         

@@ -13,11 +13,49 @@ class CharacterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        /*
         //讀取一整個表單，或者多筆資料的列表
-        $character = Character::get();
-        return response(['data' => $character]);
+        //$character = Character::get();
+        //return response(['data' => $character]);
+        */
+        
+        /*
+        //但因為如果資料超過100/1000甚至更多，要撈資料會更麻煩
+        //所以要設定每次都多少的限制，避免撈太多資料造成伺服器崩潰
+        $limit = $request->limit ?? 10;//沒有值的話預設10
+        //使用orderBy，表示SQL語法我要ORDER BY
+        $character = character::orderBy("id", "asc")
+            ->paginate($limit)//使用分頁
+            ->appends($request->query());
+        ;
+        return response($character, Response::HTTP_OK);
+        */
+
+        // 可以自訂查詢條件的查詢寫法，主要應用laravel內建的函式，就像是寫那個一樣，SQL語法 
+        $limit = $request->limit ?? 10;//設定得到的結果的上限
+        
+        //查詢建構器，分段的方式撰寫SQL語句
+        $query = character::query();
+        if(isset($request->filters)){
+            $filters = explode(",", $request->fileters);
+            //把條件切開，php?a=XXX&b=XXX之類的
+            //還有像這樣 query/XX/1/key/XX/XX/XXX/XXXXXXXX/XX/XXX/XXX之類的
+            //laravel的查詢GET大概長得像這樣 /XXX?filters=XXX:OOXX,OOO:XXOO 用,做複數的變數傳遞
+            foreach ($filters as $key => $filter){
+                list($key, $value) = explode(":", $filter);
+                $query->where($key, 'like', "%$value%");
+            }
+
+            $character = $query->orderBy("id", "desc")
+                ->paginate($limit)
+                ->appends($request->query());
+
+                return response($character, Response::HTTP_OK);
+        }
+
+        
     }
 
     /**
